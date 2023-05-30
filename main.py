@@ -8,11 +8,10 @@ from aiogram.filters import Command
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-
 import asyncio
 
 
-TOKEN = "6190908785:AAFO2ksSZsXaz058CRexCnTbRHOZuc2EVkA"  # Astra Token
+TOKEN = "BOT_TOKEN"  # Astra Token
 storage = MemoryStorage()
 bot = Bot(token=TOKEN)
 dp = Dispatcher(storage=storage)
