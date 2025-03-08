@@ -11,7 +11,7 @@ from aiogram.fsm.state import State, StatesGroup
 import asyncio
 
 
-TOKEN = "BOT_TOKEN"  # Astra Token
+TOKEN = "BOT_TOKEN"  # Astra Bot Token (From BotFather)
 storage = MemoryStorage()
 bot = Bot(token=TOKEN)
 dp = Dispatcher(storage=storage)
@@ -32,7 +32,7 @@ async def start(message: types.Message, state: FSMContext) -> None:
     registered = await db.register(message.chat.id, message.from_user.username, str(message.from_user.first_name) + ' ' + str(message.from_user.last_name))
     if registered:  # Если пользователь зарегистрирован
         await state.set_state(FSM.Introduction)  # Состояние
-        photo = FSInputFile("Баннер1.png")
+        photo = FSInputFile("./Pictures/Banners/Баннер1.png")
         inb = KeyboardButton(text='Вперёд!')
         inkb = ReplyKeyboardMarkup(resize_keyboard=True, is_persistent=True, one_time_keyboard=True, keyboard=[[inb], ])
         info = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Совет ✎', callback_data="info")], ])
@@ -50,7 +50,7 @@ async def info(callback_query: types.CallbackQuery):
 async def lets_go(message: types.message):
     await message.answer("Отлично! Давай я расскажу тебе, как устроен бот и что тебя ждет в этом курсе:", reply_markup=ReplyKeyboardRemove())
     await asyncio.sleep(2)
-    photo = FSInputFile("Баннер2.png")
+    photo = FSInputFile("./Pictures/Banners/Баннер2.png")
     inb = KeyboardButton(text='А как работает WebApp?')
     inkb = ReplyKeyboardMarkup(resize_keyboard=True, is_persistent=True, one_time_keyboard=True, keyboard=[[inb], ])
     await message.answer_photo(photo, "Курс состоит из двух частей — *теоретической и практической* 🧑‍💻", reply_markup=inkb)
@@ -70,7 +70,7 @@ async def move_on(message: types.message):
 
 @dp.message(lambda message: 'А что дальше?' in message.text, FSM.Introduction)
 async def whats_next(message: types.message):
-    photo = FSInputFile("Баннер3.png")
+    photo = FSInputFile("./Pictures/Banners/Баннер3.png")
     inb = KeyboardButton(text='Хорошо!')
     inkb = ReplyKeyboardMarkup(resize_keyboard=True, is_persistent=True, one_time_keyboard=True, keyboard=[[inb], ])
     await message.answer_photo(photo, "А также после каждого модуля следуют *тестовые задания:*", reply_markup=inkb)
@@ -91,7 +91,7 @@ async def okay_then(message: types.message):
 
 @dp.message(lambda message: 'Приятно познакомиться!' in message.text, FSM.Introduction)
 async def intro_end(message: types.message):
-    photo = FSInputFile("Баннер4.png")
+    photo = FSInputFile("./Pictures/Banners/Баннер4.png")
     inb = KeyboardButton(text='Супер, я готов приступать!')
     inkb = ReplyKeyboardMarkup(resize_keyboard=True, is_persistent=True, one_time_keyboard=True, keyboard=[[inb], ])
     await message.answer_photo(photo, "Вот также *несколько других механик курса*, с которыми ты сможешь познакомиться в процессе обучения:", reply_markup=inkb)
@@ -198,7 +198,7 @@ async def unavailable(callback_query: types.CallbackQuery):
     test_num = callback_query.data.split(' ')[1]
     inb = InlineKeyboardButton(text='Назад ◀️', callback_data=f"Модуль {test_num[0]}")
     inkb = InlineKeyboardMarkup(inline_keyboard=[[inb], ])
-    photo = FSInputFile(f"Тест {test_num}.png")
+    photo = FSInputFile(f"./Pictures/Test pictures/Тест {test_num}.png")
     await callback_query.message.answer_photo(photo, f'*Тест {test_num}* — {keys[test_num]["Баллы"]} очков\n\n{keys[test_num]["Пояснение"]}', reply_markup=inkb)
 
 
@@ -322,7 +322,7 @@ async def module(callback_query: types.CallbackQuery, state: FSMContext):
         inkb = InlineKeyboardMarkup(inline_keyboard=[[inb1, inb2], [inb3, inb4], [inb6], [inb5]])
     else:
         inkb = InlineKeyboardMarkup(inline_keyboard=[[inb1, inb2], [inb3, inb4], [inb5]])
-    photo = FSInputFile(f"{callback_query.data}.png")
+    photo = FSInputFile(f"./Pictures/Test pictures/{callback_query.data}.png")
     await callback_query.message.answer_photo(photo, f'*{callback_query.data}* — {keys[callback_query.data.split(" ")[1]]["Баллы"]} очков', reply_markup=inkb)
     await callback_query.answer()
 
@@ -443,4 +443,5 @@ async def on_shut():
 
 if __name__ == "__main__":
     bot.parse_mode = 'MARKDOWN'
-    dp.run_polling(bot)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(dp.start_polling(bot))
