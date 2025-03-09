@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, text
 
 
-engine = create_engine(url="mysql+pymysql://DB_NAME:DB_PASS@exsec.beget.tech/DB_NAME", pool_timeout=20, pool_recycle=299)
+engine = create_engine(url="mysql+pymysql://DB_LOGIN:DB_PASS@DB_HOST/DB_NAME", pool_timeout=20, pool_recycle=299)
 
 
 #  Регистрация пользователя в базе данных
